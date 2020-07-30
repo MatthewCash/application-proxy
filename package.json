@@ -1,0 +1,18 @@
+{
+    "name": "proxy",
+    "version": "1.0.0",
+    "description": "HTTPS proxy for my web applications",
+    "main": "index.js",
+    "scripts": {
+        "dev": "ts-node main.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@types/node": "^12.12.53",
+        "spdy": "^4.0.2",
+        "ts-node": "^8.10.2",
+        "typescript": "^3.9.7"
+    }
+}
