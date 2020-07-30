@@ -33,8 +33,8 @@ const app = async (clientReq, clientRes) => {
 
         const proxyReq = request(
             {
-                hostname: '127.0.0.1',
-                port: 446,
+                hostname: server.host,
+                port: server.port,
                 path: clientReq.url.substring(server.path.length),
                 method: clientReq.method,
                 headers: clientReq.headers,
