@@ -51,10 +51,10 @@ const app = async (clientReq, clientRes) => {
     });
 };
 
-const host = '127.0.0.1';
-const port = 443;
-
 const main = async () => {
+    const host = process.env.HOST ?? '127.0.0.1';
+    const port = process.env.PORT ?? 443;
+
     const key = await fs.readFile('./server.key');
     const cert = await fs.readFile('./server.crt');
 
