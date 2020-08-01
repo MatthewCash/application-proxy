@@ -51,6 +51,8 @@ const app = async (clientReq, clientRes) => {
     });
 };
 
+process.on('uncaughtException', console.warn);
+
 const main = async () => {
     const host = process.env.HOST ?? '127.0.0.1';
     const port = process.env.PORT ?? 443;
