@@ -51,7 +51,12 @@ const app = async (clientReq, clientRes) => {
     });
 };
 
-process.on('uncaughtException', console.warn);
+process.on('uncaughtException', error => {
+    if (error.message.includes('connect ECONNREFUSED')) {
+        return console.warn('Error: ' + error.message);
+    }
+    throw error;
+});
 
 const main = async () => {
     const host = process.env.HOST ?? '127.0.0.1';
