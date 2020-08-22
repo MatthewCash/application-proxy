@@ -55,6 +55,9 @@ process.on('uncaughtException', error => {
     if (error.message.includes('connect ECONNREFUSED')) {
         return console.warn('Error: ' + error.message);
     }
+    if (error.message.includes('read ECONNRESET')) {
+        return console.warn('Error: ' + error.message);
+    }
     throw error;
 });
 
