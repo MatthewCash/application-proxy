@@ -52,13 +52,19 @@ const app = async (clientReq, clientRes) => {
 };
 
 process.on('uncaughtException', error => {
-    if (error.message.includes('connect ECONNREFUSED')) {
-        return console.warn('Error: ' + error.message);
+    switch (error.message) {
+        case 'connect ECONNREFUSED': {
+            console.warn('Connection refused!');
+            break;
+        }
+        case 'read ECONNRESET': {
+            console.warn('Connection reset!');
+            break;
+        }
+        default: {
+            throw error;
+        }
     }
-    if (error.message.includes('read ECONNRESET')) {
-        return console.warn('Error: ' + error.message);
-    }
-    throw error;
 });
 
 const main = async () => {
