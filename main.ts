@@ -1,6 +1,7 @@
-import spdy from 'spdy';
+import spdy, { ServerRequest, ServerResponse } from 'spdy';
 import { promises as fs } from 'fs';
 import { Agent, request } from 'https';
+import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 
 const localAgent = new Agent({
     rejectUnauthorized: false
@@ -26,7 +27,10 @@ const apiServer: Server = {
 
 const servers: Server[] = [mainServer, apiServer];
 
-const app = async (clientReq, clientRes) => {
+const proxyHandler = async (
+    clientReq: ServerRequest,
+    clientRes: ServerResponse
+) => {
     const tryServers = [...servers].reverse();
     tryServers.some(server => {
         if (clientReq.url.indexOf(server.path) !== 0) return false;
@@ -62,19 +66,21 @@ process.on('uncaughtException', error => {
             break;
         }
         default: {
-            throw error;
+            console.error(error.message);
         }
     }
 });
 
 const main = async () => {
-    const host = process.env.HOST ?? '127.0.0.1';
-    const port = process.env.PORT ?? 443;
+    const host = process.env.HOST || '127.0.0.1';
+    const port = Number(process.env.PORT) || 443;
 
-    const key = await fs.readFile('./server.key');
-    const cert = await fs.readFile('./server.crt');
+    const [key, cert] = await Promise.all([
+        fs.readFile('./server.key'),
+        fs.readFile('./server.crt')
+    ]);
 
-    spdy.createServer({ key, cert }, app).listen(port, host);
+    spdy.createServer({ key, cert }, proxyHandler).listen(port, host);
 
     console.log(`[Ready] Listening on ${host}:${port}`);
 };
