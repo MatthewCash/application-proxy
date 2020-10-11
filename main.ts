@@ -1,7 +1,6 @@
 import spdy, { ServerRequest, ServerResponse } from 'spdy';
 import { promises as fs } from 'fs';
 import { Agent, request } from 'https';
-import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 
 const localAgent = new Agent({
     rejectUnauthorized: false
@@ -13,7 +12,7 @@ interface Server {
     path: string;
 }
 
-const mainServer: Server = {
+const frontendServer: Server = {
     host: '127.0.0.1',
     port: 444,
     path: ''
@@ -25,7 +24,7 @@ const apiServer: Server = {
     path: '/api'
 };
 
-const servers: Server[] = [mainServer, apiServer];
+const servers: Server[] = [frontendServer, apiServer];
 
 const proxyHandler = async (
     clientReq: ServerRequest,
@@ -33,7 +32,7 @@ const proxyHandler = async (
 ) => {
     const tryServers = [...servers].reverse();
     tryServers.some(server => {
-        if (clientReq.url.indexOf(server.path) !== 0) return false;
+        if (!clientReq.url.startsWith(server.path)) return false;
 
         const proxyReq = request(
             {
