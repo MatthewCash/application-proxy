@@ -14,13 +14,13 @@ interface Server {
 
 const frontendServer: Server = {
     host: '127.0.0.1',
-    port: 444,
+    port: 4444,
     path: ''
 };
 
 const apiServer: Server = {
     host: '127.0.0.1',
-    port: 446,
+    port: 4466,
     path: '/api'
 };
 
@@ -72,7 +72,7 @@ process.on('uncaughtException', error => {
 
 const main = async () => {
     const host = process.env.HOST || '127.0.0.1';
-    const port = Number(process.env.PORT) || 443;
+    const port = Number(process.env.PORT) || 4433;
 
     const [key, cert] = await Promise.all([
         fs.readFile('./server.key'),
